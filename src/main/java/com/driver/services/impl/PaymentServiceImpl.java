@@ -29,11 +29,9 @@ public class PaymentServiceImpl implements PaymentService {
         //Note that the reservationId always exists
 
         Reservation reservation = reservationRepository2.findById(reservationId).get();
-        Spot spot = reservation.getSpot();
         int amount = reservation.getNumberOfHours() * reservation.getSpot().getPricePerHour();
         if(amount > amountSent){
-            spot.setOccupied(false);
-            spotRepository.save(spot);
+
             throw new Exception("Insufficient Amount");
         }
         mode = mode.toUpperCase();
@@ -45,8 +43,6 @@ public class PaymentServiceImpl implements PaymentService {
         } else if (PaymentMode.CASH.toString().equals(mode)) {
             paymentMode = PaymentMode.CASH;
         } else {
-            spot.setOccupied(false);
-            spotRepository.save(spot);
             throw new Exception("Payment mode not detected");
         }
 
@@ -57,7 +53,6 @@ public class PaymentServiceImpl implements PaymentService {
 
         reservation.getUser().getReservationList().add(reservation);
         reservation.getSpot().getReservationList().add(reservation);
-        spotRepository.save(spot);
         paymentRepository2.save(payment);
         return payment;
     }
