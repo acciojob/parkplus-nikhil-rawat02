@@ -50,32 +50,16 @@ public class ParkingLotServiceImpl implements ParkingLotService {
     }
 
     @Override
-    public void deleteSpot(int spotId) throws Exception {
-        Spot spot;
-        try {
-            spot= spotRepository1.findById(spotId).get();
-        }catch (Exception e){
-            throw new Exception("No value present");
-        }
+    public void deleteSpot(int spotId) {
+        Spot spot = spotRepository1.findById(spotId).get();
         spotRepository1.delete(spot);
     }
 
     @Override
-    public Spot updateSpot(int parkingLotId, int spotId, int pricePerHour) throws Exception {
+    public Spot updateSpot(int parkingLotId, int spotId, int pricePerHour) {
 
-        ParkingLot parkingLot;
-        try{
-            parkingLot= parkingLotRepository1.findById(parkingLotId).get();
-        }catch (Exception e){
-            throw new Exception("Parking lot not present");
-        }
-
-        Spot spot;
-        try{
-            spot = spotRepository1.findById(spotId).get();
-        }catch (Exception e){
-            throw new Exception("Spot not present");
-        }
+        ParkingLot parkingLot = parkingLotRepository1.findById(parkingLotId).get();
+        Spot spot = spotRepository1.findById(spotId).get();
         spot.setPricePerHour(pricePerHour);
         parkingLotRepository1.save(parkingLot);
         return spot;
