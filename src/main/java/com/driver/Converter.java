@@ -11,7 +11,7 @@ import com.driver.model.SpotType;
 public class Converter {
 
     public static SpotResponseDto spotToSpotResponseDto(Spot spot){
-        return new SpotResponseDto(spot.getId(), spot.getSpotType(),spot.getPricePerHour(),spot.isOccupied(),spot.getParkingLot().getName());
+        return new SpotResponseDto(spot.getId(), spot.getSpotType(),spot.getPricePerHour(),spot.getOccupied(),spot.getParkingLot().getName());
     }
 
     public static ReservationResponseDto reservationToReservationResponseDto(Reservation reservation){
