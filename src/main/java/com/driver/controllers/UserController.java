@@ -25,7 +25,7 @@ public class UserController {
     }
 
     @DeleteMapping("/delete")
-    public void deleteUser(@RequestParam Integer userId){
+    public void deleteUser(@RequestParam Integer userId) throws Exception {
         userService.deleteUser(userId);
     }
 }
