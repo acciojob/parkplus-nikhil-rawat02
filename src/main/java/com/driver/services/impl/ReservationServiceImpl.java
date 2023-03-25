@@ -38,6 +38,7 @@ public class ReservationServiceImpl implements ReservationService {
         }catch (Exception e){
             throw new Exception("Cannot make reservation");
         }
+
         SpotType reqSpot;
         if(numberOfWheels <= 2)reqSpot = SpotType.TWO_WHEELER;
         else if (numberOfWheels <= 4)reqSpot = SpotType.FOUR_WHEELER;
@@ -53,9 +54,13 @@ public class ReservationServiceImpl implements ReservationService {
         Reservation reservation = new Reservation();
         reservation.setUser(user);
         reservation.setSpot(spot);
-        spot.setOccupied(true);
-        reservation.setNumberOfHours(timeInHours);
 
+        reservation.setNumberOfHours(timeInHours);
+        spot.setOccupied(true);
+        spot.getReservationList().add(reservation);
+        user.getReservationList().add(reservation);
+
+        userRepository3.save(user);
         spotRepository3.save(spot);
         return reservation;
 

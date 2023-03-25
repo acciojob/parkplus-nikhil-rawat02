@@ -29,11 +29,7 @@ public class PaymentServiceImpl implements PaymentService {
         //Note that the reservationId always exists
 
         Reservation reservation = reservationRepository2.findById(reservationId).get();
-        int amount = reservation.getNumberOfHours() * reservation.getSpot().getPricePerHour();
-        if(amount > amountSent){
 
-            throw new Exception("Insufficient Amount");
-        }
         mode = mode.toUpperCase();
         PaymentMode paymentMode;
         if(PaymentMode.CARD.toString().equals(mode)){
@@ -46,13 +42,18 @@ public class PaymentServiceImpl implements PaymentService {
             throw new Exception("Payment mode not detected");
         }
 
+        int amount = reservation.getNumberOfHours() * reservation.getSpot().getPricePerHour();
+        if(amount > amountSent){
+
+            throw new Exception("Insufficient Amount");
+        }
+
         Payment payment = new Payment();
         payment.setReservation(reservation);
         payment.setPaymentMode(paymentMode);
         payment.setPaymentCompleted(true);
 
-        reservation.getUser().getReservationList().add(reservation);
-        reservation.getSpot().getReservationList().add(reservation);
+        reservation.setPayment(payment);
         paymentRepository2.save(payment);
         return payment;
     }
