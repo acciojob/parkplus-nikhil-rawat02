@@ -23,6 +23,41 @@ public class ReservationServiceImpl implements ReservationService {
     ParkingLotRepository parkingLotRepository3;
     @Override
     public Reservation reserveSpot(Integer userId, Integer parkingLotId, Integer timeInHours, Integer numberOfWheels) throws Exception {
+//Reserve a spot in the given parkingLot such that the total price is minimum. Note that the price per hour for each spot is different
+        //Note that the vehicle can only be parked in a spot having a type equal to or larger than given vehicle
+        //If parkingLot is not found, user is not found, or no spot is available, throw "Cannot make reservation" exception.
+        User user;
+        try{
+            user = userRepository3.findById(userId).get();
+        }catch (Exception e){
+            throw new Exception("Cannot make reservation");
+        }
+        ParkingLot parkingLot;
+        try{
+            parkingLot = parkingLotRepository3.findById(parkingLotId).get();
+        }catch (Exception e){
+            throw new Exception("Cannot make reservation");
+        }
+        SpotType reqSpot;
+        if(numberOfWheels <= 2)reqSpot = SpotType.TWO_WHEELER;
+        else if (numberOfWheels <= 4)reqSpot = SpotType.FOUR_WHEELER;
+        else reqSpot = SpotType.OTHERS;
+
+        int spotId;
+        try{
+            spotId = spotRepository3.findSpot(parkingLotId,reqSpot.toString());
+        }catch (Exception e){
+            throw new Exception("Cannot make reservation");
+        }
+        Spot spot = spotRepository3.findById(spotId).get();
+        spot.setOccupied(true);
+        Reservation reservation = new Reservation();
+        reservation.setUser(user);
+        reservation.setSpot(spot);
+        reservation.setNumberOfHours(timeInHours);
+        spotRepository3.save(spot);
+        reservationRepository3.save(reservation);
+        return reservation;
 
     }
 }
